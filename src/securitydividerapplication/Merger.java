@@ -75,14 +75,28 @@ public class Merger {
         byte[] myfile_2 = readFileBytes(path_to_input_2);
         int len_2 = myfile_2.length;
         
-        if(len_1>=len_2){
-            System.out.println("1");
-        }
-        else{
-            System.out.println("2");
-            
-        }
+        byte[] out_file = new byte[len_1+len_2];
+        int counter_1 = 0;
+        int counter_2 = 0;
         
+        System.out.println("1");
+        for(int i=0;i<(len_1+len_2);i++){
+            if(i%2==0){
+                out_file[i] = myfile_1[counter_1];
+                counter_1++;
+            }
+            else{
+                out_file[i] = myfile_2[counter_2];
+                counter_2++;
+            }
+        }
+        String chosenFile;
+        System.out.println("Copy and paste the path for the original file:");
+        Scanner scan = new Scanner(System.in);
+        chosenFile = scan.next();
+        String path = settingPath(chosenFile);
+        
+        writeFileBytes(out_file,path);
         
     }
      //constructor
