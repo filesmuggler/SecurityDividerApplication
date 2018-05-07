@@ -4,23 +4,19 @@
  * and open the template in the editor.
  */
 package securitydividerapplication;
-
 import java.util.Scanner;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author krzst
  */
-public class Divider {
-    private String path_to_input;
-    private String path_to_output_1;
-    private String path_to_output_2;
+public class Merger {
+    private String path_to_input_1;
+    private String path_to_input_2;
+    private String path_to_output;
     private String what_OS;
     
     //universal path setter 
@@ -44,12 +40,18 @@ public class Divider {
     }
     
     //chooses file to be divided
-    public void chooseFile(){
+    public void chooseFiles(){
         String chosenFile;
-        System.out.println("Copy and paste the path to the file to be divided:");
+        
+        System.out.println("Copy and paste the path to the first file to be merged:");
         Scanner scan = new Scanner(System.in);
         chosenFile = scan.next();
-        path_to_input = settingPath(chosenFile);
+        path_to_input_1 = settingPath(chosenFile);
+        
+        System.out.println("Copy and paste the path to the second file to be merged:");
+        scan = new Scanner(System.in);
+        chosenFile = scan.next();
+        path_to_input_2 = settingPath(chosenFile);
     }
     
     //reads file byte-by-byte
@@ -64,43 +66,41 @@ public class Divider {
         Files.write(path, contents);
     }
     
-    //divides given file into 2 separate parts 
-    public void divideFile() throws IOException{
-        byte[] myfile = readFileBytes(path_to_input);
-        int len = myfile.length;
-        byte[] output_1 = new byte[len/2+1];
-        byte[] output_2 = new byte[len/2];
+    public void mergeFiles() throws IOException {
+        //read first file
+        byte[] myfile_1 = readFileBytes(path_to_input_1);
+        int len_1 = myfile_1.length;
+        
+        //read second file
+        byte[] myfile_2 = readFileBytes(path_to_input_2);
+        int len_2 = myfile_2.length;
+        
+        byte[] out_file = new byte[len_1+len_2];
         int counter_1 = 0;
         int counter_2 = 0;
-        for(int i=0;i<myfile.length;i++){
-            //System.out.println(myfile[i]);
+        
+        System.out.println("1");
+        for(int i=0;i<(len_1+len_2);i++){
             if(i%2==0){
-                output_1[counter_1]=myfile[i];
+                out_file[i] = myfile_1[counter_1];
                 counter_1++;
             }
             else{
-                output_2[counter_2]=myfile[i]; 
+                out_file[i] = myfile_2[counter_2];
                 counter_2++;
             }
         }
         String chosenFile;
-        System.out.println("Copy and paste the path for the first part of the file:");
+        System.out.println("Copy and paste the path for the original file:");
         Scanner scan = new Scanner(System.in);
         chosenFile = scan.next();
-        String path_1 = settingPath(chosenFile);
+        String path = settingPath(chosenFile);
         
-        System.out.println("Copy and paste the path for the second part of the file:");
-        scan = new Scanner(System.in);
-        chosenFile = scan.next();
-        String path_2 = settingPath(chosenFile);
-        
-        writeFileBytes(output_1,path_1);
-        writeFileBytes(output_2,path_2);
+        writeFileBytes(out_file,path);
         
     }
-    
-    //constructor
-    Divider(){
+     //constructor
+    Merger(){
         Detector detector = new Detector();
         if(detector.isWindows()){
             System.out.println("MS Windows system detected");
@@ -118,5 +118,4 @@ public class Divider {
             System.out.println("Detection error");
         }
     }
-    
 }
